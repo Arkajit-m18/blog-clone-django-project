@@ -1,0 +1,49 @@
+{% extends 'blog_clone/base.html' %}
+{% block title_body %}<title>Details</title>{% endblock %}
+{% block content %}
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="loader">{{ post.title }}</h1>
+            {% if post.published_date %}
+                <div class="date">
+                    <p>{{ post.published_date }}</p>
+                </div>
+            {% else %}
+                <div>
+                    <a href="{% url 'post_publish' pk=post.pk %}" class="btn btn-default">Publish</a>
+                </div>
+            {% endif %}
+            <h4 class="postcontent">{{ post.text | safe | linebreaks }}</h4>
+            {% if user.is_authenticated %}
+                <a href="{% url 'edit_post' pk=post.pk %}" class="btn btn-warning"><span
+                        class="glyphicon glyphicon-pencil"></span></a>
+                <a href="{% url 'delete_post' pk=post.pk %}" class="btn btn-danger"><span
+                    class="glyphicon glyphicon-remove"></span></a>
+            {% endif %}
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <a href="{% url 'comment' pk=post.pk %}" class="btn btn-primary btn-comment">Add Comment</a>
+        <div class="col-md-8">
+        {% for comment in post.comments.all %}
+            {% if user.is_authenticated or comment.approved_comment %}
+                <h6>Created: {{ comment.created_date }}</h6>
+                {% if not comment.approved_comment %}
+                    <a href="{% url 'approve_comment' pk=comment.pk %}" class="btn btn-primary"><span
+                            class="glyphicon glyphicon-ok"></span></a>
+                    <a href="{% url 'edit_comment' pk=comment.pk %}" class="btn btn-warning"><span
+                            class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="{% url 'delete_comment' pk=comment.pk %}" class="btn btn-danger"><span
+                        class="glyphicon glyphicon-remove"></span></a>
+                {% endif %}
+                <h4>{{ comment.text | safe | linebreaks }}</h4>
+                <u><p>Posted by: <b>{{ comment.author }}</b></p></u>
+                <hr>
+            {% endif %}
+            {% empty %}
+                <h6>No Comments</h6>
+        {% endfor %}
+        </div>
+    </div>
+{% endblock %}

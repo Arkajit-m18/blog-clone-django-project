@@ -1,0 +1,19 @@
+{% extends 'blog_clone/base.html' %}
+{% block title_body %}<title>Comment</title>{% endblock %}
+{% block content %}
+    <div class="jumbotron">
+        {% if form.instance.pk %}
+            <h1>Update Comment:</h1>
+        {% else %}
+            <h1>Edit Comment:</h1>
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class="btn btn-primary" value="Post">
+        </form>
+    </div>
+    <script>
+        var editor = new MediumEditor('.editable');
+    </script>
+{% endblock %}
